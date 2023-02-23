@@ -2,10 +2,10 @@
 '''Flip me over'''
 
 
-def matrix_transpose(matrix):
+def matrix_transpose(x):
     '''ca bone lale'''
-    result = [[matrix[j][i] for j in range(len(matrix))] for i in range (len(matrix[0]))]
-    return result
+    res = [[x[j][i] for j in range(len(x))] for i in range (len(x[0]))]
+    return res
 
 
 mat1 = [[1, 2], [3, 4]]
