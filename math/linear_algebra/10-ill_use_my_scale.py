@@ -4,7 +4,6 @@
 
 def np_shape(matrix):
     '''Function to calculate the shape of matrix'''
-    tuple = np.array(matrix)
     return tuple.shape
 
 
