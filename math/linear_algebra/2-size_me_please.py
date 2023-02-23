@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-def matrix_sh(matrix):
+def matrix_shape(matrix):
     
     result = []
     
