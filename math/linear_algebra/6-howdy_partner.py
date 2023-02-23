@@ -2,7 +2,7 @@
 '''Concatenate 2 Strings'''
 
 
-def cat_arrays(arr1,arr2):
+def cat_arrays(arr1, arr2):
     '''Add two Strings Together'''
     newList = []
     newList.extend(arr1)
