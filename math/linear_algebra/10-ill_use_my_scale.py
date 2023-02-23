@@ -4,7 +4,7 @@
 
 def np_shape(matrix):
     '''Function to calculate the shape of matrix'''
-    return tuple.shape
+    return matrix.shape
 
 
 mat1 = [1, 2, 3, 4, 5, 6]
