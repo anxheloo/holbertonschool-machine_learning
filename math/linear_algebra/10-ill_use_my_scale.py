@@ -2,7 +2,6 @@
 '''Function to calculate the shape of matrix'''
 
 
-import numpy as np
 def np_shape(matrix):
     '''Function to calculate the shape of matrix'''
     tuple = np.array(matrix)
