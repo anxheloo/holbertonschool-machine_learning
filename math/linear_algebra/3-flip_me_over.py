@@ -4,7 +4,7 @@
 
 def matrix_transpose(x):
     '''ca bone lale'''
-    res = [[x[j][i] for j in range(len(x))] for i in range (len(x[0]))]
+    res = [[x[j][i] for j in range(len(x))] for i in range(len(x[0]))]
     return res
 
 
