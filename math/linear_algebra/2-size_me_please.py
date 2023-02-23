@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
+'''Size me up function'''
+
+
 def matrix_shape(matrix):
+    '''skam qef'''
     result = []
     while (type(matrix) is list):
         result.append(len(matrix))
