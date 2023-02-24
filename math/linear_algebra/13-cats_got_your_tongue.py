@@ -3,7 +3,7 @@
 import numpy as np
 
 
-def np_cat(mat1, mat2, axis = 0):
+def np_cat(mat1, mat2, axis=0):
     '''done done done'''
     a = np.array(mat1)
     b = np.array(mat2)
