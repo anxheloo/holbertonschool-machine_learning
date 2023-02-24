@@ -4,5 +4,6 @@ import numpy as np
 
 
 def np_elementwise(mat1, mat2):
-    '''Math operations function numpy'''
-    return add(mat1, mat2), subtract(mat1, mat2), multiply(mat1, mat2), divide(mat1, mat2)
+    '''done done done'''
+    result = np.add(mat1, mat2), np.subtract(mat1, mat2), np.multiply(mat1, mat2), np.divide(mat1, mat2)
+    return result
