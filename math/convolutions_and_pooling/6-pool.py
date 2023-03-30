@@ -1,20 +1,18 @@
 #!/usr/bin/env python3
-"""      """
+"""hry"""
 
 
 import numpy as np
 import matplotlib.pyplot as plt
 
 def pool(images, kernel_shape, stride, mode = 'max'):
-    """        """
+    """jhjk"""
     m, height, width, c = images.shape
     kh, kw = kernel_shape
     sh, sw = stride
-    
     pool_h = ((height - kh) // sh) + 1
     pool_w = ((width - kw) // sw) + 1
     pooled = np.zeros((m, pool_h, pool_w, c))
-
     i = 0
     for h in range(0, height - kh + 1, sh):
         j = 0
@@ -23,9 +21,7 @@ def pool(images, kernel_shape, stride, mode = 'max'):
                 output = np.max(images[:, h: h+kh, w: w+kw, :], axis = (1,2))
             if mode == 'avg':
                 output = np.average(images[:, h: h+kh, w: w+kw, :], axis = (1,2))
-            
             pooled[:, i, j, :] = output
             j += 1
         i += 1
-    
     return pooled
