@@ -19,7 +19,6 @@ class Normal:
             if len(data) < 2:
                 raise ValueError("data must contain multiple values")   
             self.mean = sum(data) / len(data)
-#             self.stddev = math.sqrt(sum([(x - self.mean) ** 2 for x in data]) / len(data)-1)
             self.stddev = (sum([(x - self.mean) ** 2 for x in data]) / len(data)) ** (1/2)
 
     def z_score(self, x):
@@ -44,8 +43,7 @@ class Normal:
         erfx_value = ((x - self.mean) / (self.stddev * (2**(1/2))))
         cdf = (1/2) * (1 + self.calculate_erf(erfx_value))
         return cdf
-        
-        
+         
     def calculate_erf(self,x):
         pi = 3.1415926536
         erfx = (2 / (pi**(1/2))) * (x - ((x**3) / 3) + ((x**5) / 10) - ((x**7) / 42) + ((x**9) / 216))
