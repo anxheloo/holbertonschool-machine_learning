@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def convolve(images, kernels, padding='same', stride=(1, 1)):
+    '''adsf'''
     m, h, w, c = images.shape
     kh, kw, c, nc = kernels.shape
     sh, sw = stride
