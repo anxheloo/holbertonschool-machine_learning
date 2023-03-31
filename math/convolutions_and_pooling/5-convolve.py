@@ -1,30 +1,37 @@
 #!/usr/bin/env python3
-'''adsf'''
+"""Performs a convolution on images with nc kernels"""
 
 
 import numpy as np
-import matplotlib.pyplot as plt
 
-def convolve(images, kernels, padding='same', stride=(1, 1)):
-    '''adsf'''
-    m, h, w, c = images.shape
+
+def convolve(images, kernels, padding="same", stride=(1, 1)):
+    """Performs a convolution on images with nc kernels"""
+    m, height, width, c = images.shape
     kh, kw, c, nc = kernels.shape
     sh, sw = stride
-    if padding == 'same':
-        ph = int(np.ceil((sh * (h - 1) + kh - h) / 2))
-        pw = int(np.ceil((sw * (w - 1) + kw - w) / 2))
-    elif padding == 'valid':
-        ph, pw = 0, 0
+
+    if padding == "same":
+        ph = ((height - 1) * sh + kh - height) // 2 + 1
+        pw = ((width - 1) * sw + kw - width) // 2 + 1
+    elif padding == "valid":
+        ph = 0
+        pw = 0
     else:
         ph, pw = padding
-    images_padded = np.pad(images, ((0,0), (ph,ph),(pw,pw), (0,0)), 'constant', constant_values=0)
-    oh = int((h + 2 * ph - kh) / sh + 1)
-    ow = int((w + 2 * pw - kw) / sw + 1)
-    output = np.zeros((m, oh, ow, nc))
-    for i in range(m):
-        for j in range(oh):
-            for k in range(ow):
-                for l in range(nc):
-                    output[i, j, k, l] = np.sum(images_padded[i,
-                        j*sh:j*sh+kh, k*sw:k*sw+kw, :] * kernels[:, :, :, l])
-    return output
+
+    p_images = np.pad(images, ((0, 0), (ph, ph), (pw, pw), (0, 0)))
+
+    ch = ((height + 2 * ph - kh) // sh) + 1
+    cw = ((width + 2 * pw - kw) // sw) + 1
+
+    convoluted = np.zeros((m, ch, cw, nc))
+
+    for h in range(ch):
+        for w in range(cw):
+            for k in range(nc):
+                output = (p_images[:, h * sh: h * sh + kh,
+                          w * sw: w * sw + kw] * kernels[:, :, :, k])
+                sum_out = np.sum(output, axis=(1, 2, 3))
+                convoluted[:, h, w, k] = sum_out
+    return convoluted
