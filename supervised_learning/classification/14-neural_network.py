@@ -1,145 +1,113 @@
 #!/usr/bin/env python3
-"""
-Module to create a neural network
-"""
+
+"""Defines a Neural Network for binary classification"""
 import numpy as np
 
 
 class NeuralNetwork:
-    """
-    A class that defines a neural network with one hidden layer performing
-    binary classification
-    """
+    """Class NeuralNetowrk"""
 
     def __init__(self, nx, nodes):
-        """
-        class constructor
-        :param nx: is the number of input features to the neuron
-        """
+        """Constructor method"""
         if type(nx) is not int:
-            raise TypeError("nx must be an integer")
-        if nx < 1:
-            raise ValueError("nx must be a positive integer")
-        self.nx = nx
+            raise TypeError('nx must be an integer')
+        elif nx < 1:
+            raise ValueError('nx must be a positive integer')
+
         if type(nodes) is not int:
-            raise TypeError("nodes must be an integer")
-        if nodes < 1:
-            raise ValueError("nodes must be a positive integer")
-        # hidden layer
-        self.__W1 = np.random.randn(nodes, nx)
+            raise TypeError('nodes must be an integer')
+        elif nodes < 1:
+            raise ValueError('nodes must be a positive integer')
+
+        self.__W1 = np.random.randn(*(nodes, nx))
         self.__b1 = np.zeros((nodes, 1))
         self.__A1 = 0
-        # output neuron
-        self.__W2 = np.random.randn(1, nodes)
+        self.__W2 = np.random.randn(*(1, nodes))
         self.__b2 = 0
         self.__A2 = 0
 
-    def forward_prop(self, X):
-        """
-        Calculates the forward propagation of the neural network
-        :param X: np array with the input data of shape (nx, m)
-        :return: the private attributes __A1 and __A2
-        """
-        z1 = np.matmul(self.__W1, X) + self.__b1
-        self.__A1 = 1 / (1 + np.exp(-z1))
-        z2 = np.matmul(self.__W2, self.__A1) + self.__b2
-        self.__A2 = 1 / (1 + np.exp(-z2))
-        return self.__A1, self.__A2
-
-    def cost(self, Y, A):
-        """
-        calculates the cost of the model using logistic regression
-        :param Y: a np array with correct labels of shape (1, m)
-        :param A: a np array with the activated output of shape (1, m)
-        :return: the cost
-        """
-        cost = Y * np.log(A) + (1 - Y) * np.log(1.0000001 - A)
-        cost = np.sum(cost)
-        cost = - cost / A.shape[1]
-        return cost
-
-    def evaluate(self, X, Y):
-        """
-        evaluates the neural network prediction
-        :param X: np array with input data of shape (nx, m)
-        :param Y: np array with correct label of shape (1, m)
-        :return: neuron´s prediction and cost of the network
-        """
-        self.forward_prop(X)
-        prediction = np.where(self.__A2 >= 0.5, 1, 0)
-        cost = self.cost(Y, self.__A2)
-        return prediction, cost
-
-    def gradient_descent(self, X, Y, A1, A2, alpha=0.05):
-        """
-        calculates one pass of gradient descent on the neuron
-        :param X: np array with input data of shape (nx, m)
-        :param Y: np array with correct labels of shape (1, m)
-        :param A1: np array with activated hidden layer output of shape (1, m)
-        :param A2: np array with activated output of shape (1, m)
-        :param alpha: the learning rate
-        :return: no return
-        """
-        # gradient descent for hidden layer
-        dz2 = A2 - Y
-        dw2 = np.matmul(A1, dz2.T) / A1.shape[1]
-        db2 = np.sum(dz2, axis=1, keepdims=True) / A2.shape[1]
-
-        # derivative of the sigmoid function
-        da1 = A1 * (1 - A1)
-        # gradient descent for output layer
-        dz1 = np.matmul(self.__W2.T, dz2)
-        dz1 = dz1 * da1
-        dw1 = np.matmul(X, dz1.T) / A1.shape[1]
-        db1 = np.sum(dz1, axis=1, keepdims=True) / A1.shape[1]
-        # updated value for weights and bias
-        self.__W2 = self.__W2 - alpha * dw2.T
-        self.__b2 = self.__b2 - alpha * db2
-        self.__W1 = self.__W1 - alpha * dw1.T
-        self.__b1 = self.__b1 - alpha * db1
-
-    def train(self, X, Y, iterations=5000, alpha=0.05):
-        """
-        trains the neural network
-        :param X: np array with input data of shape (nx, m)
-        :param Y: np array with correct labels of shape (1, m)
-        :param iterations: iterations of the training
-        :param alpha: learning rate
-        :return: the evaluation of the training data
-        """
-        if type(iterations) is not int:
-            raise TypeError("iterations must be an integer")
-        if iterations < 1:
-            raise ValueError("iterations must be a positive integer")
-        if type(alpha) is not float:
-            raise TypeError("alpha must be a float")
-        if alpha <= 0:
-            raise ValueError("alpha must be positive")
-        for i in range(iterations):
-            A1, A2 = self.forward_prop(X)
-            self.gradient_descent(X, Y, A1, A2, alpha)
-        return self.evaluate(X, Y)
-
     @property
     def W1(self):
+        """W1 getter"""
         return self.__W1
 
     @property
     def b1(self):
+        """b1 getter"""
         return self.__b1
 
     @property
     def A1(self):
+        """A1 getter"""
         return self.__A1
 
     @property
     def W2(self):
+        """W2 getter"""
         return self.__W2
 
     @property
     def b2(self):
+        """b2 getter"""
         return self.__b2
 
     @property
     def A2(self):
+        """A2 getter"""
         return self.__A2
+
+    def forward_prop(self, X):
+        """Calulates the forward propagation"""
+        Z1 = np.matmul(self.__W1, X) + self.__b1
+        self.__A1 = 1/(1 + np.exp(-Z1))
+        Z2 = np.matmul(self.__W2, self.__A1) + self.__b2
+        self.__A2 = 1/(1 + np.exp(-Z2))
+        return self.__A1, self.__A2
+
+    def cost(self, Y, A):
+        """Calculates the cost"""
+        m = Y.shape[1]
+        cost = -1/m * np.sum(np.multiply(
+            Y, np.log(A)) + np.multiply((1 - Y), np.log(1.0000001 - A)))
+        return cost
+
+    def evaluate(self, X, Y):
+        """Performs binary classification
+        Outputs prediction matrix and cost"""
+        self.forward_prop(X)
+        cost = self.cost(Y, self.__A2)
+        y_hat = self.__A2.round().astype(int)
+        return y_hat, cost
+
+    def gradient_descent(self, X, Y, A1, A2, alpha=0.05):
+        """Performs gradient descent"""
+        m = Y.shape[1]
+        dZ2 = A2 - Y
+        db2 = 1/m * np.sum(dZ2, axis=1, keepdims=True)
+        dW2 = 1/m * np.matmul(dZ2, A1.T)
+        dZ1 = np.matmul(self.__W2.T, dZ2) * (A1 * (1 - A1))
+        db1 = 1/m * np.sum(dZ1, axis=1, keepdims=True)
+        dW1 = 1/m * np.matmul(dZ1, X.T)
+        self.__b2 = self.__b2 - alpha * db2
+        self.__W2 = self.__W2 - alpha * dW2
+        self.__b1 = self.__b1 - alpha * db1
+        self.__W1 = self.__W1 - alpha * dW1
+
+    def train(self, X, Y, iterations=5000, alpha=0.05):
+        """Performs the training for x iterations"""
+        if type(iterations) is not int:
+            raise TypeError('iterations must be an integer')
+        elif iterations <= 0:
+            raise ValueError('iterations must be a positive integer')
+
+        if type(alpha) is not float:
+            raise TypeError('alpha must be a float')
+        elif alpha <= 0:
+            raise ValueError('alpha must be positive')
+
+        self.evaluate(X, Y)
+        for _ in range(iterations):
+            self.gradient_descent(X, Y, self.__A1, self.__A2, alpha)
+            y_hat, cost = self.evaluate(X, Y)
+
+        return y_hat, cost
