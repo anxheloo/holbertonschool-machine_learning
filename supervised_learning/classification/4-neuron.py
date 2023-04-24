@@ -1,55 +1,83 @@
+#!/usr/bin/env python3
+"""
+Module to create a neuron
+"""
+import numpy as np
+
+
 class Neuron:
     """
-    class that represents a single neuron performing binary classification
+    A class that defines a single neuron
     """
 
-    # TASK 1
     def __init__(self, nx):
+        """
+        class constructor
+        :param nx: is the number of input features to the neuron
+        """
         if type(nx) is not int:
             raise TypeError("nx must be an integer")
         if nx < 1:
             raise ValueError("nx must be a positive integer")
+        self.nx = nx
         self.__W = np.random.randn(1, nx)
         self.__b = 0
         self.__A = 0
-    
-    @property
-    def W(self):
-        return (self.__W)
 
-    @property
-    def b(self):
-        return (self.__b)
-
-    @property
-    def A(self):
-        return (self.__A)
-    
     def forward_prop(self, X):
         """
         calculates the forward propagation of the neuron
+        :param X: a np array with shape (nx, m) that contains the input data
+        :return: private attribute __A
         """
-        z = np.matmul(self.W, X) + self.b
-        self.__A = 1 / (1 + (np.exp(-z)))
-        return (self.A)
-    
+        preactivation = np.matmul(self.__W, X) + self.__b
+        self.__A = 1 / (1 + np.exp(-preactivation))
+        return self.__A
+
     def cost(self, Y, A):
         """
-        calculates the cost of the model using logistic regression function:
-            loss = -((Y * log(A)) + ((1 - Y) * log(1 - A)))
-        logistic regression cost function:
-            cost = (1 / m) * sum of loss function for all m example
+        calculates the cost of the model using logistic regression
+        :param Y: a np array with shape (1, m) with correct labels
+        :param A: a np array with shape (1, m) containing the activated output
+        :return: the cost
         """
-        m = Y.shape[1]
-        m_loss = np.sum((Y * np.log(A)) + ((1 - Y) * np.log(1.0000001 - A)))
-        cost = (1 / m) * (-(m_loss))
-        return (cost)
-    
+        cost = Y * np.log(A) + (1 - Y) * np.log(1.0000001 - A)
+        cost = np.sum(cost)
+        cost = - cost / A.shape[1]
+        return cost
+
     def evaluate(self, X, Y):
         """
-        evaluates the neuron's predictions
+        evaluates the neuron prediction
+        :param X: np array with input data and shape (nx, m)
+        :param Y: np array with correct label and shape (1, m)
+        :return: neuron´s prediction and cost of the network
         """
-        A = self.forward_prop(X)
-        cost = self.cost(Y, A)
-        prediction = np.where(A >= 0.5, 1, 0)
-        return (prediction, cost)
+        self.forward_prop(X)
+        prediction = np.where(self.__A >= 0.5, 1, 0)
+        cost = self.cost(Y, self.__A)
+        return prediction, cost
+
+    @property
+    def W(self):
+        """
+        getter function for W
+        :return: weight vector neuron
+        """
+        return self.__W
+
+    @property
+    def b(self):
+        """
+        getter function for b
+        :return: bias for neuron
+        """
+        return self.__b
+
+    @property
+    def A(self):
+        """
+        getter function for W
+        :return: activated output of the neuron
+        """
+        return self.__A
