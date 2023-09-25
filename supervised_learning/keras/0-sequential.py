@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
-"""NN with Keras"""
-
-
+"""A function that builds a neural network with the Keras library"""
 import tensorflow.keras as K
-"""NN with Keras"""
 
 
 def build_model(nx, layers, activations, lambtha, keep_prob):
-    """NN with Keras"""
+    """A function that builds a neural network with the Keras
+    library"""
     sequential = []
     shape = (nx,)
     reg_l2 = K.regularizers.l2(lambtha)

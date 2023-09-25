@@ -1,14 +1,11 @@
 #!/usr/bin/env python3
-"""Validation data"""
-
-
+"""A function that analyzes validaiton data"""
 import tensorflow.keras as K
-"""Validation data"""
 
 
 def train_model(network, data, labels, batch_size, epochs,
                 validation_data=None, verbose=True, shuffle=False):
-    """Validation data"""
+    """A function that analyzes validaiton data"""
     history = network.fit(x=data, y=labels,
                           batch_size=batch_size,
                           epochs=epochs,

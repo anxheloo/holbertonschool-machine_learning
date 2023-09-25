@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-"""Perform binary classification"""
-
-
+"""
+Module to create a neuron
+"""
 import numpy as np
-"""Perform binary classification"""
 
 
 class Neuron:
-    """Perform binary classification"""
+    """
+    class that represents a single neuron performing binary classification
+    """
+
     def __init__(self, nx):
         if type(nx) is not int:
             raise TypeError("nx must be an integer")

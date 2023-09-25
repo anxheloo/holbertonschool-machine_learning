@@ -1,23 +1,42 @@
 #!/usr/bin/env python3
-"""Forward prop bidirectional"""
+"""
+Module contains function that performs forward
+propagation for a bidirectional RNN.
+"""
+
+
 import numpy as np
 
 
 def bi_rnn(bi_cell, X, h_0, h_t):
-    """Forward prop bidirectional"""
-    t, m, i = X.shape
-    h = h_0.shape[1]
-    H_for = np.zeros((t, m, h))
-    H_back = np.zeros((t, m, h))
-    h_ft = h_0
-    h_bt = h_t
-    for step in range(t):
-        x_ft = X[step]
-        x_bt = X[-(step + 1)]
-        h_ft = bi_cell.forward(h_ft, x_ft)
-        h_bt = bi_cell.backward(h_bt, x_bt)
-        H_for[step] = h_ft
-        H_back[-(step + 1)] = h_bt
-    H = np.concatenate((H_for, H_back), axis=-1)
-    Y = bi_cell.output(H)
-    return H, Y
+    """
+    Performs forward propagation for a bidirectional RNN.
+
+    Args:
+        bi_cell: Instance of BidirectinalCell for forward propagation.
+        X: numpy.ndarray - (t, m, i) Data.
+            t: Maximum number of time steps.
+            m: Batch size.
+            i: Dimensionality of the data.
+        h_0: numpy.ndarray - (m, h) Initial hidden state - forward direction.
+            h: Dimensionality of the hidden state.
+        h_t: numpy.ndarray - (m, h) Initial hidden state - backward direction.
+            h: Dimensionality of the hidden state.
+
+    Return: H, Y
+        H: numpy.ndarray - Concatenated hidden states.
+        Y: numpy.ndarray - Outputs.
+    """
+
+    Hf, Hb, h_next, h_prev = [], [], h_t, h_0
+
+    for x, rev_x in zip(X, X[::-1]):
+        h_prev = bi_cell.forward(h_prev, x)
+        h_next = bi_cell.backward(h_next, rev_x)
+
+        Hf.append(h_prev)
+        Hb = [h_next] + Hb
+
+    H = np.concatenate((np.stack(Hf), np.stack(Hb)), axis=-1)
+
+    return H, bi_cell.output(H)

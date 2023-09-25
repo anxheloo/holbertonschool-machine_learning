@@ -1,2 +1,3 @@
-#Read me
-Read me
+# Read supervised learning
+# Read object detection
+# Read qa bot

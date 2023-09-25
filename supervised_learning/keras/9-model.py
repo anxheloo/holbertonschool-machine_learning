@@ -1,18 +1,15 @@
 #!/usr/bin/env python3
-"""Save and load a model"""
-
-
+"""A function that saves an entire model"""
 import tensorflow.keras as K
-"""Save and load a model"""
 
 
 def save_model(network, filename):
-    """Save and load a model"""
+    """A function that saves an entire model"""
     network.save(filename)
     return None
 
 
 def load_model(filename):
-    """Save and load a model"""
+    """A function that loads the model"""
     model = K.models.load_model(filename)
     return model

@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-"""deep neural network"""
-
-
+"""
+Module to create a deep neural network
+"""
 import numpy as np
-"""deep neural network"""
 
 
 class DeepNeuralNetwork:
-    """deep neural network"""
+    """
+    Class that represents a deep neural network
+    """
+
     def __init__(self, nx, layers):
         if type(nx) is not int:
             raise TypeError("nx must be an integer")
@@ -15,27 +17,32 @@ class DeepNeuralNetwork:
             raise ValueError("nx must be a positive integer")
         if type(layers) is not list or len(layers) < 1:
             raise TypeError("layers must be a list of positive integers")
+
         weights = {}
         previous = nx
+
         for index, layer in enumerate(layers, 1):
+
             if type(layer) is not int or layer < 0:
                 raise TypeError("layers must be a list of positive integers")
+
             weights["b{}".format(index)] = np.zeros((layer, 1))
             weights["W{}".format(index)] = (np.random.randn(layer, previous) *
                                             np.sqrt(2 / previous))
             previous = layer
+
         self.__L = len(layers)
         self.__cache = {}
         self.__weights = weights
 
     @property
     def L(self):
-        return (self.__L)
+        return self.__L
 
     @property
     def cache(self):
-        return (self.__cache)
+        return self.__cache
 
     @property
     def weights(self):
-        return (self.__weights)
+        return self.__weights

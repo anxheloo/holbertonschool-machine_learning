@@ -1,19 +1,17 @@
 #!/usr/bin/env python3
-"""Trains neural network model using mini-batch"""
-
-
+"""
+Trains a loaded neural network model using mini-batch gradient descent
+"""
 import tensorflow as tf
-"""Trains neural network model using mini-batch"""
-
-
 shuffle_data = __import__('2-shuffle_data').shuffle_data
-"""Trains neural network model using mini-batch"""
 
 
 def train_mini_batch(X_train, Y_train, X_valid, Y_valid, batch_size=32,
                      epochs=5, load_path="/tmp/model.ckpt",
                      save_path="/tmp/model.ckpt"):
-    """Trains neural network model using mini-batch"""
+    """
+    Trains a loaded neural network model using mini-batch gradient descent
+    """
     m = X_train.shape[0]
     with tf.Session() as sess:
         saver = tf.train.import_meta_graph(load_path + '.meta')
@@ -23,6 +21,7 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid, batch_size=32,
         accuracy = tf.get_collection('accuracy')[0]
         loss = tf.get_collection('loss')[0]
         train_op = tf.get_collection('train_op')[0]
+
         for epoch in range(epochs + 1):
             print("After {} epochs:".format(epoch))
             train_cost = sess.run(loss, feed_dict={x: X_train,
@@ -44,6 +43,7 @@ def train_mini_batch(X_train, Y_train, X_valid, Y_valid, batch_size=32,
                 mini_batch_total = m // batch_size
             else:
                 mini_batch_total = (m // batch_size) + 1
+
             step_number = 0
             for mini_batch in range(mini_batch_total):
                 low = mini_batch * batch_size

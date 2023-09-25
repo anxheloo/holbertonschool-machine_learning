@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
-"""Calculate the accuracy of a prediction for the neural network"""
-
-
+"""
+Module to calculate accuracy of prediction
+"""
 import tensorflow as tf
-"""Calculate the accuracy of a prediction for the neural network"""
 
 
 def calculate_accuracy(y, y_pred):
-    """Calculate the accuracy of a prediction for the neural network"""
-    y_pred = tf.math.argmax(y_pred, axis=1)
-    y = tf.math.argmax(y, axis=1)
-    equality = tf.math.equal(y_pred, y)
-    accuracy = tf.reduce_mean(tf.cast(equality, "float"))
-    return accuracy
+    """
+    a function that calculates the accuracy of a prediction
+    """
+    accuracy = tf.equal(tf.argmax(y, 1), tf.argmax(y_pred, 1))
+    mean = tf.reduce_mean(tf.cast(accuracy, tf.float32))
+    return mean

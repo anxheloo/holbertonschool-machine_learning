@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
-"""Sensitivity"""
-
-
+"""A function that calculates the sensitivity for each class
+in a confusion matrix"""
 import numpy as np
-"""Sensitivity"""
 
 
 def sensitivity(confusion):
-    """Sensitivity"""
-    tp = np.diag(confusion)
-    fn = np.sum(confusion, axis=1) - tp
-    tpr = tp / (tp + fn)
-    return tpr
+    """A function that calculates the sensitivity for each
+    class in a confusion matrix"""
+    num_classes = confusion.shape[0]
+    sensitivity_arr = np.zeros(num_classes)
+    for i in range(num_classes):
+        true_positives = confusion[i, i]
+        false_negatives = np.sum(confusion[i, :]) - true_positives
+        sensitivity_arr[i] = true_positives / (true_positives
+                                               + false_negatives)
+    return sensitivity_arr

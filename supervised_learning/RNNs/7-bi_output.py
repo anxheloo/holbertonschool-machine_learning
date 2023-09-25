@@ -1,41 +1,99 @@
 #!/usr/bin/env python3
-"""Bidirecational cell"""
+"""
+Module contains class BidirectionalCell that
+represents a bidirectional cell of an RNN.
+"""
+
+
 import numpy as np
 
 
-class BidirectionalCell:
-    """Bidirectional Cell"""
+class BidirectionalCell():
+    """Represents a bidirectional cell of an RNN."""
+
     def __init__(self, i, h, o):
-        self.Whf = np.random.normal(size=(i + h, h))
-        self.Whb = np.random.normal(size=(i + h, h))
-        self.Wy = np.random.normal(size=(2 * h, o))
+        """
+        Class constructor.
+
+        Args:
+            i: Dimensionality of the data.
+            h: Dimensionality of the hidden state.
+            o: Dimensionality of the outputs.
+
+        Public Attributes:
+            Whf: Hidden state weights for forward direction.
+            bhf: Hidden state biases for forward direction.
+            Whb: Hidden state weights for backward direction.
+            bhb: Hidden state biases for backward direction.
+            Wy: Output weights.
+            by: Output biases.
+        """
+
+        self.Whf = np.random.randn(i+h, h)
+        self.Whb = np.random.randn(i+h, h)
+        self.Wy = np.random.randn(2*h, o)
         self.bhf = np.zeros((1, h))
         self.bhb = np.zeros((1, h))
         self.by = np.zeros((1, o))
 
+    @staticmethod
+    def softmax(x):
+        """softmax activation function"""
+
+        max = np.max(x, axis=1, keepdims=True)
+        e_x = np.exp(x - max)
+        sum = np.sum(e_x, axis=1, keepdims=True)
+        f_x = e_x / sum
+        return f_x
+
     def forward(self, h_prev, x_t):
-        """Forward prop bidirectional"""
-        xh_f = np.concatenate((h_prev, x_t), axis=1)
-        h_next_f = np.tanh(np.dot(xh_f, self.Whf) + self.bhf)
-        return h_next_f
+        """
+        Calculates hidden state in forward direction for 1 time step.
+
+        Args:
+            x_t: numpy.ndarray - (m, i) Data input for the cell.
+                m: Batch size for the data.
+            h_prev: numpy.ndarray - (m, h) Previous hidden state.
+
+        Return: h_next
+            h_next: Next hidden state.
+        """
+
+        dot_x = np.dot(x_t, self.Whf[h_prev.shape[1]:, :])
+        dot_h = np.dot(h_prev, self.Whf[:h_prev.shape[1], :])
+        return np.tanh(dot_x + dot_h + self.bhf)
 
     def backward(self, h_next, x_t):
-        """Backward one stop"""
-        xh_b = np.concatenate((h_next, x_t), axis=1)
-        h_prev_b = np.tanh(np.dot(xh_b, self.Whb) + self.bhb)
-        return h_prev_b
+        """
+        Calculates hidden state in backward direction for 1 time step.
+
+        Args:
+            x_t: numpy.ndarray - (m, i) Data input for the cell.
+                m: Batch size for the data.
+            h_next: numpy.ndarray - (m, h) Next hidden state.
+
+        Return: h_next
+            h_prev: Previous hidden state.
+        """
+
+        dot_x = np.dot(x_t, self.Whb[h_next.shape[1]:, :])
+        dot_h = np.dot(h_next, self.Whb[:h_next.shape[1], :])
+        return np.tanh(dot_x + dot_h + self.bhb)
 
     def output(self, H):
-        """Output"""
-        t, m, _ = H.shape
-        o = self.by.shape[1]
-        Y = np.zeros((t, m, o))
-        for step in range(t):
-            h_concat = H[step]
-            Y[step] = self.softmax(np.dot(h_concat, self.Wy) + self.by)
-        return Y
+        """
+        Calculates all outputs for the bidirectional RNN.
 
-    def softmax(self, x):
-        """Softmax"""
-        exps = np.exp(x)
-        return exps / np.sum(exps, axis=1, keepdims=True)
+        Args:
+            H: numpy.ndarray - (t, m, 2 * h) Concatenated hidden states
+            from both directions, excluding their initialized states.
+                t: Number of time steps.
+                m: Batch size for the data.
+                h: Dimensionality of hidden states.
+
+        Return: Y
+            Y: numpy.ndarray - (t, m, y) Outputs.
+        """
+
+        Y = [self.softmax(np.dot(h, self.Wy) + self.by) for h in H]
+        return np.stack(Y)

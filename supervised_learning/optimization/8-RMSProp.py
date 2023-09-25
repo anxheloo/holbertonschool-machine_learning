@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
-"""Upgrade RMSProp"""
-
-
+"""
+A function that creates the training operation for a neural network
+in tensorflow using the RMSProp optimization algorithm
+"""
 import tensorflow as tf
-"""Upgrade RMSProp"""
 
 
 def create_RMSProp_op(loss, alpha, beta2, epsilon):
-    """Upgrade RMSProp"""
-    optimizer = tf.train.RMSPropOptimizer(
-                learning_rate=alpha, decay=beta2, epsilon=epsilon)
-    train_op = optimizer.minimize(loss)
-    return train_op
+    """
+    A function that creates the training operation for a neural network
+    in tensorflow using the RMSProp optimization algorithm
+    """
+    rms = tf.train.RMSPropOptimizer(alpha, decay=beta2, epsilon=epsilon)
+    return rms.minimize(loss)

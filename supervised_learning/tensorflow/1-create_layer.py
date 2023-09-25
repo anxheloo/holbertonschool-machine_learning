@@ -1,18 +1,15 @@
 #!/usr/bin/env python3
-"""Defines a function to create a layer for neural network"""
-
-
+"""
+Module to create a layer
+"""
 import tensorflow as tf
-"""Defines a function to create a layer for neural network"""
 
 
 def create_layer(prev, n, activation):
-    """Defines a function to create a layer for neural network"""
-    weights_initializer = tf.contrib.layers.variance_scaling_initializer(
-        mode="FAN_AVG")
-    layer = tf.layers.Dense(
-        n,
-        activation=activation,
-        name="layer",
-        kernel_initializer=weights_initializer)
-    return (layer(prev))
+    """
+    a function that create layers
+    """
+    init = tf.contrib.layers.variance_scaling_initializer(mode="FAN_AVG")
+    layer = tf.layers.Dense(n, activation=activation, kernel_initializer=init,
+                            name="layer")
+    return layer(prev)

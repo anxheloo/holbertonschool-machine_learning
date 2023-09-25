@@ -1,25 +1,34 @@
 #!/usr/bin/env python3
-"""Deep RNN"""
+"""
+Defines function that performs forward propagation for a deep RNN
+"""
 import numpy as np
 
 
 def deep_rnn(rnn_cells, X, h_0):
-    """Deep RNN"""
+    """
+    Performs forward propagation for a deep RNN
+    parameters:
+    rnn_cells: cells that will be used for the forward propagation
+    X: the data to be used
+    h_0: the initial hidden state
+    """
+    layers = len(rnn_cells)
     t, m, i = X.shape
     l, m, h = h_0.shape
-    o = rnn_cells[-1].by.shape[1]
-    H = np.zeros((t + 1, l, m, h))
-    Y = np.zeros((t, m, o))
+    H = np.zeros((t + 1, layers, m, h))
     H[0] = h_0
-
     for step in range(t):
-        h_aux = X[step]
-        for layer in range(len(rnn_cells)):
-            r_cell = rnn_cells[layer]
-            x_t = h_aux
-            h_prev = H[step][layer]
-            h_next, y_next = r_cell.forward(h_prev=h_prev, x_t=x_t)
-            h_aux = h_next
-            H[step + 1][layer] = h_aux
-        Y[step] = y_next
-    return H, Y
+        for layer in range(layers):
+            if layer == 0:
+                h_prev = X[step]
+            h_prev, y = rnn_cells[layer].forward(H[step, layer], h_prev)
+            H[step + 1, layer, ...] = h_prev
+            if layer == layers - 1:
+                if step == 0:
+                    Y = y
+                else:
+                    Y = np.concatenate((Y, y))
+    output_shape = Y.shape[-1]
+    Y = Y.reshape(t, m, output_shape)
+    return (H, Y)

@@ -1,27 +1,29 @@
 #!/usr/bin/env python3
-"""Forward prop with dropout"""
-
-
+"""
+A function that conducts forward propagation using Dropout
+"""
 import numpy as np
-"""Forward prop with dropout"""
 
 
 def dropout_forward_prop(X, weights, L, keep_prob):
-    """Forward prop with dropout"""
-    outputs = {}
-    outputs["A0"] = X
-    for index in range(L):
-        weight = weights["W{}".format(index + 1)]
-        bias = weights["b{}".format(index + 1)]
-        z = np.matmul(weight, outputs["A{}".format(index)]) + bias
-        dropout = np.random.binomial(1, keep_prob, size=z.shape)
-        if index != (L - 1):
-            A = np.tanh(z)
-            A *= dropout
-            A /= keep_prob
-            outputs["D{}".format(index + 1)] = dropout
+    """
+    A function that conducts forward propagation using Dropout
+    """
+    cache = {}
+    cache["A0"] = X
+    for i in range(1, L + 1):
+        Z = np.dot(weights["W{}".format(i)],
+                   cache["A{}".format(
+                    i - 1)]) + weights["b{}".format(i)]
+        if i != L:
+            tanh = np.sinh(Z) / np.cosh(Z)
+            D1 = np.random.rand(tanh.shape[0], tanh.shape[1])
+            D1 = (D1 < keep_prob).astype(int)
+            tanh = tanh * D1
+            tanh = tanh / keep_prob
+            cache["D{}".format(i)] = D1
         else:
-            A = np.exp(z)
-            A /= np.sum(A, axis=0, keepdims=True)
-        outputs["A{}".format(index + 1)] = A
-    return outputs
+            t = np.exp(Z)
+            tanh = np.exp(Z) / np.sum(t, axis=0, keepdims=True)
+        cache["A{}".format(i)] = tanh
+    return cache

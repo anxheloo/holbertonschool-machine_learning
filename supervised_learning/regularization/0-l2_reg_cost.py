@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
-"""Regularization cost"""
-
-
+"""
+A function that calculates the cost of a neural network with L2 regularization
+"""
 import numpy as np
-"""Regularization cost"""
 
 
 def l2_reg_cost(cost, lambtha, weights, L, m):
-    """Regularization cost"""
-    l2_cost = 0
-    for i in range(1, L+1):
-        l2_cost += np.sum(np.square(weights['W'+str(i)]))
-    l2_cost *= lambtha/(2*m)
-    return cost + l2_cost
+    """
+    A function that calculates the cost of a neural network
+    with L2 regularization
+    """
+    l2_norm_squared = 0
+    for l in range(1, L+1):
+        l2_norm_squared += np.sum(np.square(weights["W" + str(l)]))
+    l2_regularization_cost = (lambtha / (2 * m)) * l2_norm_squared
+    return cost + l2_regularization_cost

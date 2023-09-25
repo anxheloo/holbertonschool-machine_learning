@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
-"""Save the best model"""
-
-
+"""A function that updates the function def train_model
+and also saves the best iteration of the model"""
 import tensorflow.keras as K
-"""Save the best model"""
 
 
 def train_model(network, data, labels, batch_size, epochs,
@@ -11,7 +9,8 @@ def train_model(network, data, labels, batch_size, epochs,
                 patience=0, learning_rate_decay=False, alpha=0.1,
                 decay_rate=1, save_best=False, filepath=None,
                 verbose=True, shuffle=False):
-    """Save the best model"""
+    """A function that updates the function def train_model
+    and also saves the best iteration of the model"""
     callback = []
 
     if early_stopping and validation_data:

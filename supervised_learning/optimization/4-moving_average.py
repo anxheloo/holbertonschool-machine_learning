@@ -1,13 +1,9 @@
 #!/usr/bin/env python3
-"""Moving average"""
-
-
-import numpy as np
-"""Moving average"""
+"""A function that calculates the weighted moving average of a data set"""
 
 
 def moving_average(data, beta):
-    """Moving average"""
+    """A function that calculates the weighted moving average of a data set"""
     v = 0
     EMA = []
     for i in range(len(data)):

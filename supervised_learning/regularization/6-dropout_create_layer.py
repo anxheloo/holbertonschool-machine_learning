@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
-"""Layer with dropout"""
-
-
+"""A function taht creates a layer usig dropout"""
 import tensorflow as tf
-"""Layer with dropout"""
 
 
 def dropout_create_layer(prev, n, activation, keep_prob):
-    """Layer with dropout"""
-    dropout = tf.layers.Dropout(keep_prob)
-    init = tf.contrib.layers.variance_scaling_initializer(mode="FAN_AVG")
-    tensor = tf.layers.Dense(units=n, activation=activation,
-                             kernel_initializer=init,
-                             kernel_regularizer=dropout)
-    return tensor(prev)
+    """
+    A function that creates a layer using dropout"""
+    W = tf.contrib.layers.variance_scaling_initializer(mode="FAN_AVG")
+    l2 = tf.layers.Dropout(keep_prob)
+    model = tf.layers.Dense(units=n, activation=activation,
+                            name="layer", kernel_initializer=W,
+                            kernel_regularizer=l2)
+    return model(prev)

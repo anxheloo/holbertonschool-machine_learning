@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Test a neural network"""
+"""
+Tests a Neural Network
+"""
 import tensorflow.keras as K
 
 
 def test_model(network, data, labels, verbose=True):
-    """Test a neural network"""
-    loss, accuracy = network.evaluate(x=data,
-                                      y=labels,
-                                      verbose=verbose)
-    return loss, accuracy
+    """
+    a function that tests a NN
+    """
+    return network.evaluate(data, labels, verbose=verbose)
